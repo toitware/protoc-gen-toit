@@ -18,9 +18,5 @@ jobs:
       run: make test
     - name: Build
       run: make build
-    - name: PWD
-      run: pwd
     - name: Generate examples
-      env:
-        PROTO_FLAGS: "--plugin=protoc-gen-toit=`pwd`/protoc-gen-toit"
-      run: make clean gen_examples
+      run: PROTO_FLAGS="--plugin=protoc-gen-toit=${{ env.GITHUB_WORKSPACE}}/protoc-gen-toit" make clean gen_examples
