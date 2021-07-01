@@ -29,7 +29,7 @@ The compiler plugin has some options that can be enabled using the `--toit_opt` 
 
 ### `constructor_initializers` (default 0)
 
-if set each generated class constructor will have flags to initialize the object fields.
+if set to `1` each generated class constructor will have flags to initialize the object fields.
 
 see `examples/helloworld`.
 
@@ -41,7 +41,7 @@ see `examples/imports`.
 
 ### `core_objects` (default 1)
 
-If set the built-in protobuf objects such as Timestamp, Duration etc. will be mapped directly to their counterparts in toit.
+If set to `1` the built-in protobuf objects such as Timestamp, Duration etc. will be mapped directly to their counterparts in toit.
 
 see `examples/core_objects`.
 

@@ -22,8 +22,6 @@ const (
 	constructorInitializersParam = "constructor_initializers"
 	// importLibraryParam (key1=value1(;key2=value2)*), will change the library import path as prefix for the current one.
 	importLibraryParam = "import_library"
-	// relative_imports (bool), if set, will import as relative paths.
-	relativeImportsParam = "relative_imports"
 	// convert_hooks (bool), if set, will import as relative paths.
 	convertHooksParam = "convert_hooks"
 	// core_objects (bool), if set, will decode core protobuf messages into their toit counterparts (Timestamp and Duration).
@@ -45,7 +43,6 @@ type generator struct {
 
 type generatorOptions struct {
 	ConstructorInitializers bool
-	RelativeImports         bool
 	ConvertHooks            bool
 	CoreObjects             bool
 	ImportLibraries         map[string]string
@@ -62,14 +59,6 @@ func parseGeneratorOptions(params map[string]string) (generatorOptions, error) {
 			return options, fmt.Errorf("failed to parse '%s' option reason: %w", constructorInitializersParam, err)
 		}
 		options.ConstructorInitializers = b
-	}
-
-	if v, ok := params[relativeImportsParam]; ok {
-		b, err := strconv.ParseBool(v)
-		if err != nil {
-			return options, fmt.Errorf("failed to parse '%s' option reason: %w", relativeImportsParam, err)
-		}
-		options.RelativeImports = b
 	}
 
 	if v, ok := params[convertHooksParam]; ok {
@@ -103,7 +92,7 @@ func newGenerator(req *plugin.CodeGeneratorRequest, params map[string]string) (*
 	return &generator{
 		req:            req,
 		options:        options,
-		importResolver: newImportResolver(options.ImportLibraries, options.RelativeImports),
+		importResolver: newImportResolver(options.ImportLibraries),
 		types:          map[string]*referType{},
 		imports:        map[string]string{},
 	}, nil
@@ -114,10 +103,9 @@ type importResolver struct {
 	values map[string]string
 }
 
-func newImportResolver(importLibraries map[string]string, relativeImports bool) *importResolver {
-	if !relativeImports {
-		importLibraries[""] = protoLibrary
-	}
+func newImportResolver(importLibraries map[string]string) *importResolver {
+	importLibraries["google/protobuf/"] = protoLibrary + ".google.protobuf"
+
 	res := &importResolver{
 		values: importLibraries,
 	}
