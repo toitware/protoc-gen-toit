@@ -16,3 +16,7 @@ jobs:
       uses: actions/checkout@v2
     - name: Test
       run: make test
+    - name: Install
+      run: go install .
+    - name: Generate examples
+      run: make clean gen_examples
