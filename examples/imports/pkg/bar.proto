@@ -1,0 +1,13 @@
+// Copyright (C) 2021 Toitware ApS. All rights reserved.
+// Use of this source code is governed by an MIT-style license that can be
+// found in the LICENSE file.
+
+syntax = "proto3";
+
+package pkg.bar;
+
+import "pkg/foo.proto";
+
+message Outer {
+  pkg.foo.Hello hello = 1;
+}

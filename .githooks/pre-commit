@@ -4,15 +4,15 @@
 # Use of this source code is governed by an MIT-style license that can be
 # found in the LICENSE file.
 
-EXTENSIONS="*.go"
+EXTENSIONS="*.go *.proto"
 
 new_files=$(git diff --name-only --diff-filter=A --cached -- $EXTENSIONS)
 
 for f in $new_files; do
-  if ! grep -L "Copyright .* Toitware" "$f" 2>&1 1>/dev/null; then
+  if ! grep -l "Copyright .* Toitware" "$f" 2>&1 1>/dev/null; then
     missing_copyright="$f $missing_copyright"
   else
-    if ! grep -L "governed.*MIT" "$f"  2>&1 1>/dev/null; then
+    if ! grep -l "governed.*MIT" "$f"  2>&1 1>/dev/null; then
       missing_mit="$f $missing_mit"
     fi
   fi
