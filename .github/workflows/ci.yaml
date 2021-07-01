@@ -16,7 +16,3 @@ jobs:
       uses: actions/checkout@v2
     - name: Test
       run: make test
-    - name: Build
-      run: make build
-    - name: Generate examples
-      run: PROTO_FLAGS="--plugin=protoc-gen-toit=${{ env.GITHUB_WORKSPACE}}/protoc-gen-toit" make clean gen_examples
