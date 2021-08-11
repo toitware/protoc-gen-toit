@@ -525,7 +525,6 @@ func (g *generator) writeDefaultConstructor(w *toit.Writer, fields []*fieldType,
 func (g *generator) writeDeserializeConstructor(w *toit.Writer, fields []*fieldType, oneofTypes []*oneofType) error {
 	return util.FirstError(
 		w.StartConstructorDecl("deserialize"),
-		w.ParameterWithDefault("--repeated", "bool", "false"),
 		w.Parameter("r", "_protobuf.Reader"),
 		w.EndConstructorDecl(),
 		func() error {
@@ -678,7 +677,6 @@ func (g *generator) writeSerializeFieldMethod(w *toit.Writer, fieldType *fieldTy
 
 func (g *generator) writeDeserializeBody(w *toit.Writer, objectName string, fields []*fieldType, oneOfTypes []*oneofType) error {
 	w.StartCall("r.read_message")
-	w.NamedArgument("--repeated", "repeated")
 	w.StartBlock(false)
 
 	if len(fields) == 0 {
@@ -715,7 +713,7 @@ func (g *generator) writeReadFieldAssignment(w *toit.Writer, objectName string, 
 		return util.FirstError(
 			w.StartCall(objectName+"._deserialize_"+fieldName),
 			w.NewLine(),
-			g.writeReadFieldType(w, objectName, fieldName, fieldType, false),
+			g.writeReadFieldType(w, objectName, fieldName, fieldType),
 			w.EndCall(true),
 		)
 	}
@@ -728,19 +726,25 @@ func (g *generator) writeReadFieldAssignment(w *toit.Writer, objectName string, 
 	return util.FirstError(
 		w.StartAssignment(assignTo),
 		w.Argument(""),
-		g.writeReadFieldType(w, objectName, fieldName, fieldType, false),
+		g.writeReadFieldType(w, objectName, fieldName, fieldType),
 		w.EndAssignment(),
 	)
 }
 
-func (g *generator) writeReadFieldType(w *toit.Writer, objectName string, fieldName string, fieldType *fieldType, repeated bool) error {
+func (g *generator) writeReadFieldType(w *toit.Writer, objectName string, fieldName string, fieldType *fieldType) error {
+
 	switch fieldType.class {
 	case fieldTypeClassList:
+		protoType, err := protobufTypeConst(fieldType.valueType.field.GetType())
+		if err != nil {
+			return err
+		}
 		return util.FirstError(
 			w.StartCall("r.read_array"),
+			w.Argument("_protobuf."+protoType),
 			w.Argument(fieldName),
 			w.StartBlock(false),
-			g.writeReadFieldType(w, objectName, fieldName+"_value", fieldType.valueType, true),
+			g.writeReadFieldType(w, objectName, fieldName+"_value", fieldType.valueType),
 			w.EndBlock(false),
 			w.EndCall(true),
 		)
@@ -749,10 +753,10 @@ func (g *generator) writeReadFieldType(w *toit.Writer, objectName string, fieldN
 			w.StartCall("r.read_map"),
 			w.Argument(fieldName),
 			w.StartBlock(true),
-			g.writeReadFieldType(w, objectName, fieldName+"_key", fieldType.keyType, false),
+			g.writeReadFieldType(w, objectName, fieldName+"_key", fieldType.keyType),
 			w.EndBlock(true),
 			w.StartBlock(true),
-			g.writeReadFieldType(w, objectName, fieldName+"_value", fieldType.valueType, false),
+			g.writeReadFieldType(w, objectName, fieldName+"_value", fieldType.valueType),
 			w.EndBlock(true),
 			w.EndCall(true),
 		)
@@ -769,7 +773,6 @@ func (g *generator) writeReadFieldType(w *toit.Writer, objectName string, fieldN
 			if fnName != "" {
 				return util.FirstError(
 					w.StartCall(fnName),
-					w.NamedArgument("--repeated", strconv.FormatBool(repeated)),
 					w.Argument("r"),
 					w.EndCall(true),
 				)
@@ -792,7 +795,6 @@ func (g *generator) writeReadFieldType(w *toit.Writer, objectName string, fieldN
 
 		return util.FirstError(
 			w.StartCall(toitClass+".deserialize"),
-			w.NamedArgument("--repeated", strconv.FormatBool(repeated)),
 			w.Argument("r"),
 			w.EndCall(true),
 		)
