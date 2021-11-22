@@ -6,7 +6,7 @@ import core as _core
 import protogen.google.protobuf.timestamp_pb as _timestamp
 import protogen.google.protobuf.duration_pb as _duration
 
-// MESSAGE START: ..TimeObject
+// MESSAGE START: .TimeObject
 class TimeObject extends _protobuf.Message:
   Time/_core.Time := _protobuf.TIME_ZERO_EPOCH
   Duration/_core.Duration := _core.Duration.ZERO
@@ -19,12 +19,12 @@ class TimeObject extends _protobuf.Message:
     if Duration != null:
       this.Duration = Duration
 
-  constructor.deserialize --repeated/bool=false r/_protobuf.Reader:
-    r.read_message --repeated=repeated:
+  constructor.deserialize r/_protobuf.Reader:
+    r.read_message:
       r.read_field 1:
-        Time = _protobuf.deserialize_timestamp --repeated=false r
+        Time = _protobuf.deserialize_timestamp r
       r.read_field 2:
-        Duration = _protobuf.deserialize_duration --repeated=false r
+        Duration = _protobuf.deserialize_duration r
 
   serialize w/_protobuf.Writer --as_field/int?=null --oneof/bool=false -> none:
     w.write_message_header this --as_field=as_field --oneof=oneof
@@ -39,5 +39,5 @@ class TimeObject extends _protobuf.Message:
     return (_protobuf.size_timestamp Time --as_field=1)
       + (_protobuf.size_duration Duration --as_field=2)
 
-// MESSAGE END: ..TimeObject
+// MESSAGE END: .TimeObject
 

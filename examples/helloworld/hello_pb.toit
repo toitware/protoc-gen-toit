@@ -4,7 +4,7 @@
 import encoding.protobuf as _protobuf
 import core as _core
 
-// MESSAGE START: ..hello
+// MESSAGE START: .hello
 class hello extends _protobuf.Message:
   world/string := ""
 
@@ -13,8 +13,8 @@ class hello extends _protobuf.Message:
     if world != null:
       this.world = world
 
-  constructor.deserialize --repeated/bool=false r/_protobuf.Reader:
-    r.read_message --repeated=repeated:
+  constructor.deserialize r/_protobuf.Reader:
+    r.read_message:
       r.read_field 1:
         world = r.read_primitive _protobuf.PROTOBUF_TYPE_STRING
 
@@ -28,5 +28,5 @@ class hello extends _protobuf.Message:
   protobuf_size -> int:
     return (_protobuf.size_primitive _protobuf.PROTOBUF_TYPE_STRING world --as_field=1)
 
-// MESSAGE END: ..hello
+// MESSAGE END: .hello
 
