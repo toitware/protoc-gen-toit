@@ -1233,7 +1233,7 @@ func (g *generator) writeProtobufSizeField(w *toit.Writer, fieldType *fieldType,
 	return nil
 }
 
-func (g *generator) resolveFieldType(field *descriptor.FieldDescriptorProto, ignoreRepeated bool, typePath ...string) (*fieldType, error) {
+func (g *generator) resolveFieldType(field *descriptor.FieldDescriptorProto, ignoreRepeated bool) (*fieldType, error) {
 	var t *referType
 	if field.GetType() == descriptor.FieldDescriptorProto_TYPE_MESSAGE || field.GetType() == descriptor.FieldDescriptorProto_TYPE_ENUM {
 		var ok bool
