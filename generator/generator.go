@@ -241,10 +241,11 @@ func typeName(name string, typePath ...string) string {
 
 func (g *generator) writeOneof(w *toit.Writer, msg *descriptor.DescriptorProto, oneof *descriptor.OneofDescriptorProto, typePath ...string) (*oneofType, error) {
 	res := &oneofType{
-		Descriptor: oneof,
-		FieldName:  uniqueName(oneof.GetName()+"_", reservedFieldNames, "_"),
-		CaseGetter: uniqueName(oneof.GetName()+"_oneof_case", reservedFieldNames, "_"),
-		CaseFields: map[int32]string{},
+		Descriptor:    oneof,
+		FieldName:     uniqueName(oneof.GetName()+"_", reservedFieldNames, "_"),
+		CaseGetter:    uniqueName(oneof.GetName()+"_oneof_case", reservedFieldNames, "_"),
+		ClearFunction: uniqueName(oneof.GetName()+"_oneof_clear", reservedFieldNames, "_"),
+		CaseFields:    map[int32]string{},
 	}
 	res.CaseName = res.CaseGetter + "_"
 
@@ -254,6 +255,20 @@ func (g *generator) writeOneof(w *toit.Writer, msg *descriptor.DescriptorProto, 
 		w.Variable(res.FieldName, "", "null"),
 		w.Variable(res.CaseName, "int?", "null"),
 		w.NewLine(),
+	); err != nil {
+		return nil, err
+	}
+
+	if err := util.FirstError(
+		w.StartFunctionDecl(res.ClearFunction),
+		w.EndFunctionDecl("none"),
+		w.StartAssignment(res.FieldName),
+		w.Argument("null"),
+		w.EndAssignment(),
+		w.StartAssignment(res.CaseName),
+		w.Argument("null"),
+		w.EndAssignment(),
+		w.EndFunction(),
 	); err != nil {
 		return nil, err
 	}
