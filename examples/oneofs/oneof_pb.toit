@@ -10,6 +10,10 @@ class MessageWithOneOf extends _protobuf.Message:
   value_ := null
   value_oneof_case_/int? := null
 
+  value_oneof_clear -> none:
+    value_ = null
+    value_oneof_case_ = null
+
   static VALUE_I/int ::= 1
   static VALUE_S/int ::= 2
 

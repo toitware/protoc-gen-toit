@@ -59,11 +59,12 @@ func toitClassName(typ string, super ...string) string {
 }
 
 type oneofType struct {
-	FieldName  string
-	CaseName   string
-	CaseGetter string
-	CaseFields map[int32]string
-	Descriptor *descriptor.OneofDescriptorProto
+	FieldName     string
+	CaseName      string
+	CaseGetter    string
+	ClearFunction string
+	CaseFields    map[int32]string
+	Descriptor    *descriptor.OneofDescriptorProto
 }
 
 type fieldTypeClass int
