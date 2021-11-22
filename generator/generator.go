@@ -212,15 +212,20 @@ func (g *generator) generateFile(file *descriptor.FileDescriptorProto) (*plugin.
 
 	w.NewLine()
 
+	var typePath []string
+	if file != nil && file.Package != nil {
+		typePath = append(typePath, file.GetPackage())
+	}
+
 	// create enums
 	for _, enum := range file.GetEnumType() {
-		if err := g.writeEnum(w, enum, file.GetPackage()); err != nil {
+		if err := g.writeEnum(w, enum, typePath...); err != nil {
 			return nil, err
 		}
 	}
 
 	for _, msg := range file.GetMessageType() {
-		if err := g.writeMessage(w, msg, file.GetPackage()); err != nil {
+		if err := g.writeMessage(w, msg, typePath...); err != nil {
 			return nil, err
 		}
 	}
@@ -732,7 +737,6 @@ func (g *generator) writeReadFieldAssignment(w *toit.Writer, objectName string, 
 }
 
 func (g *generator) writeReadFieldType(w *toit.Writer, objectName string, fieldName string, fieldType *fieldType) error {
-
 	switch fieldType.class {
 	case fieldTypeClassList:
 		protoType, err := protobufTypeConst(fieldType.valueType.field.GetType())

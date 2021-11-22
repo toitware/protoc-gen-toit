@@ -22,6 +22,11 @@ func (t *referType) Name() string {
 	if t.parent != nil {
 		return t.parent.Name() + "." + t.elementName()
 	}
+
+	if t.file == nil || t.file.Package == nil {
+		return "." + t.elementName()
+	}
+
 	return "." + t.file.GetPackage() + "." + t.elementName()
 }
 

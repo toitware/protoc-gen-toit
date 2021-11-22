@@ -11,10 +11,10 @@ class Outer extends _protobuf.Message:
 
   constructor:
 
-  constructor.deserialize --repeated/bool=false r/_protobuf.Reader:
-    r.read_message --repeated=repeated:
+  constructor.deserialize r/_protobuf.Reader:
+    r.read_message:
       r.read_field 1:
-        hello = _foo.Hello.deserialize --repeated=false r
+        hello = _foo.Hello.deserialize r
 
   serialize w/_protobuf.Writer --as_field/int?=null --oneof/bool=false -> none:
     w.write_message_header this --as_field=as_field --oneof=oneof

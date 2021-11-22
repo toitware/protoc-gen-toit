@@ -10,8 +10,8 @@ class Hello extends _protobuf.Message:
 
   constructor:
 
-  constructor.deserialize --repeated/bool=false r/_protobuf.Reader:
-    r.read_message --repeated=repeated:
+  constructor.deserialize r/_protobuf.Reader:
+    r.read_message:
       r.read_field 1:
         world = r.read_primitive _protobuf.PROTOBUF_TYPE_STRING
 

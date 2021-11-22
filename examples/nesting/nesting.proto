@@ -1,0 +1,32 @@
+// Copyright (C) 2021 Toitware ApS. All rights reserved.
+// Use of this source code is governed by an MIT-style license that can be
+// found in the LICENSE file.
+
+syntax = "proto3";
+
+enum MyEnum {
+  UNKNOWN = 0;
+  SET = 1;
+}
+
+message Foo {
+  string s = 1;
+}
+
+message InnerMessage {
+  message Foo {
+    MyEnum i = 1;
+  }
+
+  enum MyEnum {
+    UNKNOWN = 0;
+  }
+
+  InnerMessage.Foo foo = 1;
+  InnerMessage.MyEnum enum = 2;
+}
+
+message Message {
+  Foo foo = 1;
+  MyEnum enum = 2;
+}

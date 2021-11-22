@@ -9,10 +9,14 @@ targets:
 toit:
 	mkdir toit
 
-toit/%_pb.toit: $(PROTO_DIR)/%.proto toit
-	protoc $< --toit_out=toit --toit_opt=import_library=pkg=. $(PROTO_FLAGS)
+.PHONY: protoc-gen-toit
+protoc-gen-toit:
+	make -C ../../ protoc-gen-toit
 
-protobuf: $(PROTO_TARGETS)
+toit/%_pb.toit: $(PROTO_DIR)/%.proto toit
+	protoc --plugin=protoc-gen-toit=../../protoc-gen-toit  $< --toit_out=toit --toit_opt=import_library=pkg=. $(PROTO_FLAGS)
+
+protobuf: $(PROTO_TARGETS) protoc-gen-toit
 
 clean:
 	rm -rf toit
