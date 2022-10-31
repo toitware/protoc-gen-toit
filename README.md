@@ -1,4 +1,6 @@
 # protoc-gen-toit
+This repository is deprecated. See https://github.com/toitware/toit-protobuf instead.
+
 The `protoc-gen-toit` is a compiler plugin to protoc. It augments the protoc compiler so it knows how to generate Toit specific code for a given .proto file.
 
 ## Install
